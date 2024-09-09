@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Image Extractor</title>
+    <style>
+      img {
+        /* width: 1200px;
+        height: 1200px; */
+        margin: 10px;
+      }
+      #refresh,
+      #extract-iframe {
+        margin-bottom: 10px;
+      }
+      #iframe-container {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="refresh">Refresh Images</button>
+    <button id="extract-iframe">Extract iFrame</button>
+    <h1>Extracted Images</h1>
+    <div id="image-container"></div>
+    <h1>Extracted iFrame</h1>
+    <div id="iframe-container"></div>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.1/dist/tesseract.min.js"></script> -->
+    <script src="popup.js"></script>
+  </body>
+</html>
