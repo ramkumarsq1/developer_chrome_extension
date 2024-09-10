@@ -60,3 +60,68 @@ document.addEventListener("DOMContentLoaded", function () {
 
   updateImages(); // Load images when the popup is opened.
 });
+// ====
+document.addEventListener('DOMContentLoaded', function() {
+  chrome.storage.local.get(['requests'], function(result) {
+    const requestList = document.getElementById('request-list');
+    const requests = result.requests || [];
+
+    if (requests.length === 0) {
+      requestList.innerHTML = '<p>No requests found.</p>';
+    } else {
+      requests.forEach((request) => {
+        const div = document.createElement('div');
+        div.className = 'request';
+
+        // Display request body as-is since it's already converted to a string
+        let requestBody = request.requestBody || 'No request body';
+
+        // Display response body if available
+        let responseBody = request.responseBody || 'No response body';
+
+        div.innerHTML = `
+          <strong>URL:</strong> ${request.url} <br>
+          <strong>Method:</strong> ${request.method} <br>
+          <strong>Request Body:</strong> <pre>${requestBody}</pre> <br>
+          <strong>Response Body:</strong> <pre>${responseBody}</pre> <br>
+        `;
+        requestList.appendChild(div);
+      });
+    }
+  });
+});
+
+// =======
+document.getElementById('extract-iframe').addEventListener('click', function() {
+  // Access the iFrame content
+  const iframeContainer = document.getElementById('iframe-container');
+  const iframe = iframeContainer.querySelector('iframe');
+
+  if (iframe) {
+    try {
+      // Get the contentDocument of the iFrame
+      const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+      console.log(iframe.contentDocument)
+      console.log(iframe.contentWindow.document)
+
+      // Find the element with ID 'hello'
+      const helloElement = iframeDocument.getElementById('hello');
+      console.log(helloElement)
+      // Check if the element exists
+      if (helloElement) {
+        // Get the HTML of the element
+        const helloHTML = helloElement.outerHTML;
+
+        // Display the HTML in the 'output' div
+        document.getElementById('output').innerText = helloHTML;
+      } else {
+        document.getElementById('output').innerText = 'Element with ID "hello" not found.';
+      }
+    } catch (error) {
+      console.error('Error accessing iFrame content:', error);
+      document.getElementById('output').innerText = 'Error accessing iFrame content.';
+    }
+  } else {
+    document.getElementById('output').innerText = 'iFrame not found.';
+  }
+});
