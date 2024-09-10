@@ -73,14 +73,30 @@ document.addEventListener('DOMContentLoaded', function() {
         const div = document.createElement('div');
         div.className = 'request';
 
-        // Display request body as-is since it's already converted to a string
-        let requestBody = request.requestBody || 'No request body';
+        // Extract and format query string parameters
+        const url = new URL(request.url);
+        const queryParams = Array.from(url.searchParams.entries());
+        let queryParamsHTML = '<strong>Query String:</strong> <pre>' + url.search + '</pre><br>';
+        
+        // Define the keys you are interested in
+        const keysOfInterest = ['auid', 'cplatform']; // Add more keys if needed
 
-        // Display response body if available
+        let keyValuesHTML = '<strong>Specific Query Parameters:</strong><ul>';
+        queryParams.forEach(([key, value]) => {
+          if (keysOfInterest.includes(key)) {
+            keyValuesHTML += `<li><strong>${key}:</strong> ${value}</li>`;
+          }
+        });
+        keyValuesHTML += '</ul>';
+
+        // Display request body and response body
+        let requestBody = request.requestBody || 'No request body';
         let responseBody = request.responseBody || 'No response body';
 
         div.innerHTML = `
           <strong>URL:</strong> ${request.url} <br>
+          ${queryParamsHTML} 
+          ${keyValuesHTML} <br>
           <strong>Method:</strong> ${request.method} <br>
           <strong>Request Body:</strong> <pre>${requestBody}</pre> <br>
           <strong>Response Body:</strong> <pre>${responseBody}</pre> <br>
