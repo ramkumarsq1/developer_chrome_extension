@@ -66,46 +66,60 @@ document.addEventListener('DOMContentLoaded', function() {
     const requestList = document.getElementById('request-list');
     const requests = result.requests || [];
 
+    // Flag to check if any matching requests are found
+    let foundMatchingRequests = false;
+
     if (requests.length === 0) {
       requestList.innerHTML = '<p>No requests found.</p>';
     } else {
       requests.forEach((request) => {
-        const div = document.createElement('div');
-        div.className = 'request';
-
-        // Extract and format query string parameters
+        // Check if the request URL contains 'auid'
         const url = new URL(request.url);
         const queryParams = Array.from(url.searchParams.entries());
-        let queryParamsHTML = '<strong>Query String:</strong> <pre>' + url.search + '</pre><br>';
-        
-        // Define the keys you are interested in
-        const keysOfInterest = ['auid', 'cplatform']; // Add more keys if needed
+        const hasAuid = queryParams.some(([key]) => key === 'auid');
 
-        let keyValuesHTML = '<strong>Specific Query Parameters:</strong><ul>';
-        queryParams.forEach(([key, value]) => {
-          if (keysOfInterest.includes(key)) {
-            keyValuesHTML += `<li><strong>${key}:</strong> ${value}</li>`;
-          }
-        });
-        keyValuesHTML += '</ul>';
+        if (hasAuid) {
+          foundMatchingRequests = true;
+          const div = document.createElement('div');
+          div.className = 'request';
 
-        // Display request body and response body
-        let requestBody = request.requestBody || 'No request body';
-        let responseBody = request.responseBody || 'No response body';
+          // Extract and format query string parameters
+          let queryParamsHTML = '<strong>Query String:</strong> <pre>' + url.search + '</pre><br>';
 
-        div.innerHTML = `
-          <strong>URL:</strong> ${request.url} <br>
-          ${queryParamsHTML} 
-          ${keyValuesHTML} <br>
-          <strong>Method:</strong> ${request.method} <br>
-          <strong>Request Body:</strong> <pre>${requestBody}</pre> <br>
-          <strong>Response Body:</strong> <pre>${responseBody}</pre> <br>
-        `;
-        requestList.appendChild(div);
+          // Define the keys you are interested in
+          const keysOfInterest = ['auid', 'cplatform']; // Add more keys if needed
+
+          let keyValuesHTML = '<strong>Specific Query Parameters:</strong><ul>';
+          queryParams.forEach(([key, value]) => {
+            if (keysOfInterest.includes(key)) {
+              keyValuesHTML += `<li><strong>${key}:</strong> ${value}</li>`;
+            }
+          });
+          keyValuesHTML += '</ul>';
+
+          // Display request body and response body
+          let requestBody = request.requestBody || 'No request body';
+          let responseBody = request.responseBody || 'No response body';
+
+          div.innerHTML = `
+            <strong>URL:</strong> ${request.url} <br>
+            ${queryParamsHTML} 
+            ${keyValuesHTML} <br>
+            <strong>Method:</strong> ${request.method} <br>
+            <strong>Request Body:</strong> <pre>${requestBody}</pre> <br>
+            <strong>Response Body:</strong> <pre>${responseBody}</pre> <br>
+          `;
+          requestList.appendChild(div);
+        }
       });
+
+      if (!foundMatchingRequests) {
+        requestList.innerHTML = '<p>No specified URLs with the given key were found.</p>';
+      }
     }
   });
 });
+
 
 // =======
 document.getElementById('extract-iframe').addEventListener('click', function() {
