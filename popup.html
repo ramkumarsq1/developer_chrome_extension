@@ -3,30 +3,56 @@
   <head>
     <title>Image Extractor</title>
     <style>
+      h2{
+        margin-top:0;
+        color:#565656;
+      }
+      .popup-container{
+        width:300px;
+        padding:10px;
+        border-radius: 10px;
+      }
+      .inner-card{
+        border:1px solid rgb(221, 220, 220);
+        padding:10px;
+        border-radius: 10px;
+
+      }
       img {
-        /* width: 1200px;
-        height: 1200px; */
         margin: 10px;
       }
       #refresh,
-      #extract-iframe {
+      #extract-iframe,#clear {
         margin-bottom: 10px;
+        background:  linear-gradient(90deg, rgba(139,0,213,1) 0%, rgba(106,0,255,0.6671918767507004) 51%);
+        border:none;
+        padding:5px;
+        border-radius:5px;
+        width:90px;
+        text-align: center;
+        color:white;
+      }
+      .button-container{
+        display: flex;
+        justify-content: center;
       }
       #iframe-container {
         margin-top: 20px;
-      }
+       }
     </style>
   </head>
   <body>
-    <button id="refresh">Refresh Images</button>
-    <button id="extract-iframe">Extract iFrame</button>
-    <h1>Extracted Images</h1>
-    <div id="image-container"></div>
-    <h1>Extracted iFrame</h1>
-    <div id="iframe-container"></div>
-    <div id="request-list"></div>
-    <div id="output"></div>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.1/dist/tesseract.min.js"></script> -->
-    <script src="popup.js"></script>
-  </body>
+    <div class="popup-container">
+      <div class="inner-card">
+        <h2>Extracted PDF</h2>
+        <div id="request-list"></div>
+        <div class="button-container">
+          <button id="refresh">Refresh</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.1/dist/tesseract.min.js"></script> -->
+  <script src="popup.js"></script>
+</body>
 </html>

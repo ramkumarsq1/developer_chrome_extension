@@ -3,7 +3,7 @@
   "name": "Image Extractor",
   "version": "1.0",
   "description": "Extract and display all images from the webpage.",
-  "permissions": ["webRequest", "activeTab", "scripting", "storage"],
+  "permissions": ["webRequest", "activeTab", "scripting", "storage","tabs"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
