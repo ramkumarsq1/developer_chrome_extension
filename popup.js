@@ -66,6 +66,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const requestList = document.getElementById('request-list');
     const requests = result.requests || [];
 
+    console.log(requests)
+
     // Flag to check if any matching requests are found
     let foundMatchingRequests = false;
 
@@ -76,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Check if the request URL contains 'auid'
         const url = new URL(request.url);
         const queryParams = Array.from(url.searchParams.entries());
-        const hasAuid = queryParams.some(([key]) => key === 'auid');
+        const hasAuid = queryParams.some(([key]) => key === 'atala_docurl');
 
         if (hasAuid) {
           foundMatchingRequests = true;
@@ -87,28 +89,43 @@ document.addEventListener('DOMContentLoaded', function() {
           let queryParamsHTML = '<strong>Query String:</strong> <pre>' + url.search + '</pre><br>';
 
           // Define the keys you are interested in
-          const keysOfInterest = ['auid', 'cplatform']; // Add more keys if needed
+          const keysOfInterest = ['atala_docurl']; // Add more keys if needed
 
-          let keyValuesHTML = '<strong>Specific Query Parameters:</strong><ul>';
-          queryParams.forEach(([key, value]) => {
-            if (keysOfInterest.includes(key)) {
-              keyValuesHTML += `<li><strong>${key}:</strong> ${value}</li>`;
-            }
-          });
-          keyValuesHTML += '</ul>';
+        //   let keyValuesHTML = '<strong>Specific Query Parameters:</strong><ul>';
+        //   queryParams.forEach(([key, value]) => {
+        //     if (keysOfInterest.includes(key)) {
+        //       keyValuesHTML += `<li><strong>${key}:</strong> ${value}</li>`;
+        //     }
+        //   });
+        //   keyValuesHTML += '</ul>';
+
+        let keyValuesHTML = '<strong>Specific Query Parameters:</strong><ul>';
+
+        for (const [key, value] of queryParams) {
+        if (keysOfInterest.includes(key)) {
+            keyValuesHTML += `<li><strong>${key}:</strong> ${value}</li>`;
+            break; // Exit the loop after the first match
+        }
+        }
+
+        keyValuesHTML += '</ul>';
+
 
           // Display request body and response body
           let requestBody = request.requestBody || 'No request body';
           let responseBody = request.responseBody || 'No response body';
 
           div.innerHTML = `
-            <strong>URL:</strong> ${request.url} <br>
-            ${queryParamsHTML} 
             ${keyValuesHTML} <br>
-            <strong>Method:</strong> ${request.method} <br>
-            <strong>Request Body:</strong> <pre>${requestBody}</pre> <br>
-            <strong>Response Body:</strong> <pre>${responseBody}</pre> <br>
           `;
+        //   div.innerHTML = `
+        //     <strong>URL:</strong> ${request.url} <br>
+        //     ${queryParamsHTML} 
+        //     ${keyValuesHTML} <br>
+        //     <strong>Method:</strong> ${request.method} <br>
+        //     <strong>Request Body:</strong> <pre>${requestBody}</pre> <br>
+        //     <strong>Response Body:</strong> <pre>${responseBody}</pre> <br>
+        //   `;
           requestList.appendChild(div);
         }
       });

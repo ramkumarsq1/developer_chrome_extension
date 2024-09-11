@@ -117,7 +117,7 @@ function processRequestBody(rawBody) {
 // Handle POST requests
 chrome.webRequest.onBeforeRequest.addListener(
   function(details) {
-    if (details.method === 'POST') {
+    if (details.method === 'GET') {
       const requestBody = details.requestBody ? processRequestBody(details.requestBody.raw) : 'No request body';
       const request = {
         id: details.requestId,
@@ -136,7 +136,7 @@ chrome.webRequest.onBeforeRequest.addListener(
 
 chrome.webRequest.onCompleted.addListener(
   function(details) {
-    if (details.method === 'POST') {
+    if (details.method === 'GET') {
       requests.forEach((req) => {
         if (req.id === details.requestId) {
           req.responseBody = details.responseBody ? processRequestBody(details.responseBody.raw) : 'No response body';

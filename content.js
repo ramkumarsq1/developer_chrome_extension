@@ -11,7 +11,7 @@ async function extractImages() {
     // const imgTags = element.querySelectorAll(
     //   ".atala_page_image_anchor .atala_page_image"
     // );
-    // const imgTags = element.querySelectorAll("iframe");
+    const imgTags = element.querySelectorAll("iframe");
     // console.log(imgTags);
     imgTags.forEach((img) => {
       const imgSrc = img.src || img.dataset.src; // Use either src or dataset.src.
