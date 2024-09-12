@@ -148,9 +148,50 @@ chrome.webRequest.onCompleted.addListener(
   { urls: ["<all_urls>"] }
 );
 
-chrome.webRequest.onErrorOccurred.addListener(
-  function(details) {
-    console.error('onErrorOccurred:', details);
-  },
-  { urls: ["<all_urls>"] }
-);
+// chrome.webRequest.onErrorOccurred.addListener(
+//   function(details) {
+//     console.error('onErrorOccurred:', details);
+//   },
+//   { urls: ["<all_urls>"] }
+// );
+chrome.tabs.onActivated.addListener(function(activeInfo) {
+  chrome.tabs.get(activeInfo.tabId, function(tab) {
+    // Clear all storage (localStorage, chrome.storage.local) and reload the page in the active tab
+    clearAllStorageAndReload(tab);
+  });
+});
+
+chrome.windows.onFocusChanged.addListener(function(windowId) {
+  if (windowId === chrome.windows.WINDOW_ID_NONE) {
+    // No window is focused (the user has switched away from the Chrome window)
+    return;
+  }
+  chrome.tabs.query({ active: true, windowId: windowId }, function(tabs) {
+    if (tabs.length > 0) {
+      // Clear all storage and reload the URL in the active tab when focus changes
+      clearAllStorageAndReload(tabs[0]);
+    }
+  });
+});
+
+// Function to clear all storage (localStorage and chrome.storage.local) and reload the page in the active tab
+function clearAllStorageAndReload(tab) {
+  if (tab && tab.url) {
+    // Clear chrome.storage.local first
+    chrome.storage.local.clear(function() {
+      console.log('chrome.storage.local cleared');
+      
+      // Now, clear the tab's localStorage and reload the page
+      chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        func: () => {
+          // Clear the localStorage in the context of the tab
+          localStorage.clear();
+          // Reload the page
+          location.reload();
+        }
+      });
+    });
+  }
+}
+
