@@ -326,7 +326,6 @@ document.addEventListener('DOMContentLoaded', () => {
         uniqueAuid.add(item.auid);
         htmlContent += `
           <div>
-            <strong>URL:</strong> ${item.url} <br />
             <strong>AUID:</strong> ${item.auid} <br />
           </div>
           <hr />
@@ -341,5 +340,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+
+
+
+
 
 

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Image Extractor",
+  "name": "Extractor",
   "version": "1.0",
-  "description": "Extract and display all images from the webpage.",
+  "description": "Extract all urls from the webpage.",
   "permissions": ["webRequest", "activeTab", "scripting", "storage","tabs","webNavigation"],
   "action": {
     "default_popup": "popup.html",
