@@ -7,9 +7,9 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "icons/facebook.png",
-      "48": "icons/instagram.png",
-      "128": "icons/whatsapp.png"
+      "16": "icons/pro1.png",
+      "48": "icons/pro1.png",
+      "128": "icons/pro1.png"
     }
   },
   "host_permissions": [
@@ -25,8 +25,8 @@
     }
   ],
   "icons": {
-    "16": "icons/facebook.png",
-    "48": "icons/instagram.png",
-    "128": "icons/whatsapp.png"
+    "16": "icons/pro1.png",
+    "48": "icons/pro1.png",
+    "128": "icons/pro1.png"
   }
 }
