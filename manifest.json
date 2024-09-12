@@ -3,7 +3,7 @@
   "name": "Image Extractor",
   "version": "1.0",
   "description": "Extract and display all images from the webpage.",
-  "permissions": ["webRequest", "activeTab", "scripting", "storage","tabs"],
+  "permissions": ["webRequest", "activeTab", "scripting", "storage","tabs","webNavigation"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -13,7 +13,7 @@
     }
   },
   "host_permissions": [
-    "*://*/*"
+   "<all_urls>"
   ],
   "background": {
     "service_worker": "background.js"

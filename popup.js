@@ -230,86 +230,114 @@
 //     }
 //   });
 // });
-document.addEventListener('DOMContentLoaded', function() {
-  const refreshButton = document.getElementById('refresh');
-  refreshButton.addEventListener('click', function() {
-    location.reload(); // Refresh the page
-  });
+// document.addEventListener('DOMContentLoaded', function() {
+//   const refreshButton = document.getElementById('refresh');
+//   refreshButton.addEventListener('click', function() {
+//     location.reload(); // Refresh the page
+//   });
 
-  chrome.storage.local.get(['requests'], function(result) {
-    const requestList = document.getElementById('request-list');
-    const requests = result.requests || [];
+//   chrome.storage.local.get(['requests'], function(result) {
+//     const requestList = document.getElementById('request-list');
+//     const requests = result.requests || [];
 
-    console.log(requests)
+//     console.log(requests)
 
-    // Flag to check if any matching requests are found
-    let foundMatchingRequests = false;
+//     // Flag to check if any matching requests are found
+//     let foundMatchingRequests = false;
 
-    if (requests.length === 0) {
-      requestList.innerHTML = '<p>No requests found.</p>';
-    } else {
-      // requests.forEach((request) => {
-        for (let i = 0; i < requests.length; i++) {
-          const request = requests[i];
+//     if (requests.length === 0) {
+//       requestList.innerHTML = '<p>No requests found.</p>';
+//     } else {
+//       // requests.forEach((request) => {
+//         for (let i = 0; i < requests.length; i++) {
+//           const request = requests[i];
   
-        // Check if the request URL contains 'auid'
-        const url = new URL(request.url);
-        const queryParams = Array.from(url.searchParams.entries());
-        const hasAuid = queryParams.some(([key]) => key === 'auid');
+//         // Check if the request URL contains 'auid'
+//         const url = new URL(request.url);
+//         const queryParams = Array.from(url.searchParams.entries());
+//         const hasAuid = queryParams.some(([key]) => key === 'auid');
 
-        if (hasAuid) {
-          foundMatchingRequests = true;
-          const div = document.createElement('div');
-          div.className = 'request';
+//         if (hasAuid) {
+//           foundMatchingRequests = true;
+//           const div = document.createElement('div');
+//           div.className = 'request';
 
-          // Extract and format query string parameters
-          let queryParamsHTML = '<strong>Query String:</strong> <pre>' + url.search + '</pre><br>';
+//           // Extract and format query string parameters
+//           let queryParamsHTML = '<strong>Query String:</strong> <pre>' + url.search + '</pre><br>';
 
-          // Define the keys you are interested in
-          const keysOfInterest = ['auid']; // Add more keys if needed
+//           // Define the keys you are interested in
+//           const keysOfInterest = ['auid']; // Add more keys if needed
 
-          let keyValuesHTML = '<ul style="padding:0">';
-          queryParams.forEach(([key, value]) => {
-            if (keysOfInterest.includes(key)) {
-              keyValuesHTML += `<li style="list-style-type:none;font-size:15px;"><strong style="color:#565656">PDF Name:</strong> ${value}</li>`;
-            }
-          });
-          keyValuesHTML += '</ul>';
+//           let keyValuesHTML = '<ul style="padding:0">';
+//           queryParams.forEach(([key, value]) => {
+//             if (keysOfInterest.includes(key)) {
+//               keyValuesHTML += `<li style="list-style-type:none;font-size:15px;"><strong style="color:#565656">PDF Name:</strong> ${value}</li>`;
+//             }
+//           });
+//           keyValuesHTML += '</ul>';
 
-        // let keyValuesHTML = '<strong>Specific Query Parameters:</strong><ul>';
+//         // let keyValuesHTML = '<strong>Specific Query Parameters:</strong><ul>';
 
-        // for (const [key, value] of queryParams) {
-        // if (keysOfInterest.includes(key)) {
-        //     keyValuesHTML += `<li><strong>${key}:</strong> ${value}</li>`;
-        //     break; // Exit the loop after the first match
-        // }
-        // }
+//         // for (const [key, value] of queryParams) {
+//         // if (keysOfInterest.includes(key)) {
+//         //     keyValuesHTML += `<li><strong>${key}:</strong> ${value}</li>`;
+//         //     break; // Exit the loop after the first match
+//         // }
+//         // }
 
-        // keyValuesHTML += '</ul>';
+//         // keyValuesHTML += '</ul>';
 
 
-          // Display request body and response body
-          let requestBody = request.requestBody || 'No request body';
-          let responseBody = request.responseBody || 'No response body';
+//           // Display request body and response body
+//           let requestBody = request.requestBody || 'No request body';
+//           let responseBody = request.responseBody || 'No response body';
 
-          div.innerHTML = `
-            ${keyValuesHTML} <br>
-          `;
-        //   div.innerHTML = `
-        //     <strong>URL:</strong> ${request.url} <br>
-        //     ${queryParamsHTML} 
-        //     ${keyValuesHTML} <br>
-        //     <strong>Method:</strong> ${request.method} <br>
-        //     <strong>Request Body:</strong> <pre>${requestBody}</pre> <br>
-        //     <strong>Response Body:</strong> <pre>${responseBody}</pre> <br>
-        //   `;
-          requestList.appendChild(div);
-          break;
-        }
+//           div.innerHTML = `
+//             ${keyValuesHTML} <br>
+//           `;
+//         //   div.innerHTML = `
+//         //     <strong>URL:</strong> ${request.url} <br>
+//         //     ${queryParamsHTML} 
+//         //     ${keyValuesHTML} <br>
+//         //     <strong>Method:</strong> ${request.method} <br>
+//         //     <strong>Request Body:</strong> <pre>${requestBody}</pre> <br>
+//         //     <strong>Response Body:</strong> <pre>${responseBody}</pre> <br>
+//         //   `;
+//           requestList.appendChild(div);
+//           break;
+//         }
+//       }
+//       if (!foundMatchingRequests) {
+//         requestList.innerHTML = '<p>No specified URLs with the given key were found.</p>';
+//       }
+//     }
+//   });
+// });
+
+document.addEventListener('DOMContentLoaded', () => {
+  chrome.storage.local.get('networkData', (data) => {
+    const content = document.getElementById('content');
+    const networkData = data.networkData || {};
+    const uniqueAuid = new Set(); // Use a Set to track unique auid values
+    let htmlContent = '';
+
+    Object.values(networkData).forEach(item => {
+      if (item.auid && !uniqueAuid.has(item.auid)) {
+        uniqueAuid.add(item.auid);
+        htmlContent += `
+          <div>
+            <strong>URL:</strong> ${item.url} <br />
+            <strong>AUID:</strong> ${item.auid} <br />
+          </div>
+          <hr />
+        `;
       }
-      if (!foundMatchingRequests) {
-        requestList.innerHTML = '<p>No specified URLs with the given key were found.</p>';
-      }
+    });
+
+    if (htmlContent) {
+      content.innerHTML = htmlContent;
+    } else {
+      content.textContent = 'No unique GET requests with AUID parameter found for this tab.';
     }
   });
 });
